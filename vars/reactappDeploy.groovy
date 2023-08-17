@@ -13,6 +13,7 @@ pipeline {
     parameters {
         choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
         choice(name: 'MODULE', choices: ['react'], description: 'Choose module to build')
+        choice(name: 'BRANCH', choices: ['NUD-27','main','alpha-test'], description: 'Git Branch Name')
        string(name: 'WORKSPACE', description: 'Workspace path')
         string(name: 'S3_BUCKET_NAME', description: 'S3 bucket name')
         string(name: 'S3_BUCKET_PATH', description: 'S3 bucket path')
