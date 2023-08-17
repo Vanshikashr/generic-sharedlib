@@ -76,6 +76,23 @@ pipeline {
                 )
             }
         }
+       stage("Setting up the Environments") {
+            steps {
+                script {
+                    def envData = utilities.setupEnvironments(params.ENV, params.BRANCH, params.MODULE)
+                    println("========================================================================")
+                    println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
+                    println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
+                    println("IMAGE_NAME: " + envData.IMAGE_NAME)
+                    println("DOCKER_IMAGE_NAME: " + envData.DOCKER_IMAGE_NAME)
+                    println("EKS_IMAGE_NAME: " + envData.EKS_IMAGE_NAME)
+                    println("CLUSTER_NAME: " + envData.CLUSTER_NAME)
+                    println("TASK_NAME: " + envData.TASK_NAME)
+                    println("SERVICE_NAME: " + envData.SERVICE_NAME)
+                }
+            }
+        }
+        
   } 
     }
 }
