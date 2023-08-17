@@ -1,8 +1,4 @@
-#!/usr/bin/groovy
-
-import com.packages.Utilities
-import com.packages.Build
-import com.packages.Deploy
+def call(envValue, branchValue, moduleValue, workspaceValue, s3BucketNameValue, s3BucketPathValue, regionNameValue, dockerImageNameValue, eksImageNameValue, commitIdValue, dockerImageTagValue, repositoryNameValue, helmBranchValue, helmRepoValue, kubeConfigValue) {
 
 pipeline {
     agent any
@@ -76,6 +72,6 @@ pipeline {
                 )
             }
         }
-        
+  } 
     }
 }
