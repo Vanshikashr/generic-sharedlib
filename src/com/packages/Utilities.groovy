@@ -83,6 +83,36 @@ def dockerImagePush(String workspace, String regionName, String repositoryNumber
         """
     }
 }
+// setting env. variables
+def setupEnvironments(String env, String branch, String module) {
+    def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
+    def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
+
+    def REPOSITORY_NAME = "${env.DEFAULT_ENV}-${env.DEFAULT_PROJECT_PREFIX}-${module}"
+    def IMAGE_NAME = "${env.REPOSITORY_NUMBER}.dkr.ecr.${env.REGION_NAME}.amazonaws.com/${REPOSITORY_NAME}"
+
+    def DOCKER_IMAGE_TAG = "${env}_${branch}_${COMMIT_ID}"
+    def EKS_IMAGE_TAG = "${env}_latest"
+
+    def DOCKER_IMAGE_NAME = "${IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+    def EKS_IMAGE_NAME = "${IMAGE_NAME}:${EKS_IMAGE_TAG}"
+
+    def CLUSTER_NAME = "${env}-${env.DEFAULT_PROJECT_PREFIX}"
+    def EKS_PREFIX = "${env}-${env.DEFAULT_PROJECT_PREFIX}-${module}"
+    def TASK_NAME = "${EKS_PREFIX}"
+    def SERVICE_NAME = "${EKS_PREFIX}"
+
+    return [
+        ARTIFACT_VERSION: ARTIFACT_VERSION,
+        REPOSITORY_NAME: REPOSITORY_NAME,
+        IMAGE_NAME: IMAGE_NAME,
+        DOCKER_IMAGE_NAME: DOCKER_IMAGE_NAME,
+        EKS_IMAGE_NAME: EKS_IMAGE_NAME,
+        CLUSTER_NAME: CLUSTER_NAME,
+        TASK_NAME: TASK_NAME,
+        SERVICE_NAME: SERVICE_NAME
+    ]
+}
 
 
 
