@@ -1,5 +1,13 @@
-def call( workspaceValue, s3BucketNameValue, s3BucketPathValue, regionNameValue, dockerImageNameValue, eksImageNameValue, commitIdValue, dockerImageTagValue, repositoryNameValue, helmBranchValue, helmRepoValue, kubeConfigValue) {
+#!/usr/bin/groovy
 
+import com.packages.Utilities
+import com.packages.Build
+import com.packages.Deploy
+
+    def call() {
+deploy = new Deploy()
+    build = new Build()
+    utilities = new Utilities()
 pipeline {
     agent any
     parameters {
@@ -24,26 +32,26 @@ pipeline {
         stage("Setting Build") {
             steps {
                 script {
-                    setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
+                   build.setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
                 }
             }
         }
         
         stage("Pulling the Repository") {
             steps {
-                pullRepository(params.BRANCH, params.ENV)
+                utilities.pullRepository(params.BRANCH, params.ENV)
             }
         }
         
         stage("Building the Artifacts") {
             steps {
-                buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
+                build.buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
             }
         }
         
         stage("Docker Image Push") {
             steps {
-                dockerImagePush(
+                utilities.dockerImagePush(
                     params.WORKSPACE,
                     params.REGION_NAME,
                     params.REPOSITORY_NUMBER,
@@ -58,7 +66,7 @@ pipeline {
         
         stage("Deploying App") {
             steps {
-                deployApp(
+                deploy.deployApp(
                     params.HELM_BRANCH,
                     params.HELM_REPO,
                     params.ENV,
