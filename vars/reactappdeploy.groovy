@@ -1,0 +1,81 @@
+#!/usr/bin/groovy
+
+import com.packages.Utilities
+import com.packages.Build
+import com.packages.Deploy
+
+pipeline {
+    agent any
+    parameters {
+        choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
+        choice(name: 'MODULE', choices: ['react'], description: 'Choose module to build')
+        string(name: 'BRANCH', defaultValue: 'NUD-27', description: 'Git Branch Name')
+        string(name: 'ENV', description: 'Environment')
+        string(name: 'BRANCH', description: 'Branch')
+        string(name: 'MODULE', description: 'Module')
+        string(name: 'WORKSPACE', description: 'Workspace path')
+        string(name: 'S3_BUCKET_NAME', description: 'S3 bucket name')
+        string(name: 'S3_BUCKET_PATH', description: 'S3 bucket path')
+        string(name: 'REGION_NAME', description: 'Region name')
+        string(name: 'DOCKER_IMAGE_NAME', description: 'Docker image name')
+        string(name: 'EKS_IMAGE_NAME', description: 'EKS image name')
+        string(name: 'COMMIT_ID', description: 'Commit ID')
+        string(name: 'DOCKER_IMAGE_TAG', description: 'Docker image tag')
+        string(name: 'REPOSITORY_NAME', description: 'Repository name')
+        string(name: 'HELM_BRANCH', description: 'Helm branch')
+        string(name: 'HELM_REPO', description: 'Helm repository URL')
+        string(name: 'DOCKER_IMAGE_TAG', description: 'Docker image tag')
+        string(name: 'KUBE_CONFIG', description: 'Kube config')
+       
+    }
+  stages {
+        stage("Setting Build") {
+            steps {
+                script {
+                    setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
+                }
+            }
+        }
+        
+        stage("Pulling the Repository") {
+            steps {
+                pullRepository(params.BRANCH, params.ENV)
+            }
+        }
+        
+        stage("Building the Artifacts") {
+            steps {
+                buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
+            }
+        }
+        
+        stage("Docker Image Push") {
+            steps {
+                dockerImagePush(
+                    params.WORKSPACE,
+                    params.REGION_NAME,
+                    params.REPOSITORY_NUMBER,
+                    params.DOCKER_IMAGE_NAME,
+                    params.EKS_IMAGE_NAME,
+                    params.COMMIT_ID,
+                    params.DOCKER_IMAGE_TAG,
+                    params.REPOSITORY_NAME
+                )
+            }
+        }
+        
+        stage("Deploying App") {
+            steps {
+                deployApp(
+                    params.HELM_BRANCH,
+                    params.HELM_REPO,
+                    params.ENV,
+                    params.MODULE,
+                    params.DOCKER_IMAGE_TAG,
+                    params.KUBE_CONFIG
+                )
+            }
+        }
+        
+    }
+}
