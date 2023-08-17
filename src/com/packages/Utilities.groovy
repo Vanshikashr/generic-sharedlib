@@ -15,3 +15,22 @@ def helmInstall(String namespace, String release, String module, String dockerIm
         """
     }
 }
+
+
+// clean workspace
+def cleanWorkspace() {
+    step([$class: 'WsCleanup'])
+}
+
+// clone repository
+def pullRepository(String branch, String env) {
+    echo "Branch: ${branch}"
+    echo "Environment: ${env}"
+    
+    script {
+        def BRANCH_NAME = branch ?: env.DEFAULT_BRANCH
+        
+        git branch: "${BRANCH_NAME}", url: "${env.GIT_URL}", changelog: true, poll: true
+    }
+}    
+
