@@ -32,5 +32,57 @@ def pullRepository(String branch, String env) {
         
         git branch: "${BRANCH_NAME}", url: "${env.GIT_URL}", changelog: true, poll: true
     }
-}    
+}   
+
+// docker push
+def dockerImagePush(String workspace, String regionName, String repositoryNumber, String dockerImageName, String eksImageName, String commitId, String dockerImageTag, String repositoryName) {
+    script {
+        sh """#!/bin/bash
+            set -xe
+            echo $workspace
+
+            echo "Docker Image Push"
+            aws ecr get-login-password --region ${regionName} | docker login --username AWS --password-stdin ${repositoryNumber}.dkr.ecr.${regionName}.amazonaws.com
+            docker rmi -f ${dockerImageName}
+            docker buildx build --platform linux/amd64,linux/arm64 --provenance=false -f Dockerfile --build-arg artifact_version=${commitId} -t ${dockerImageName} -t ${eksImageName} --push .
+
+            if [ \$? -eq 0 ]
+            then
+                echo "Successfully image tagged and pushed to repository"
+                echo ${dockerImageName} > $workspace/image_id
+                cat $workspace/image_id
+            else
+                echo "Error in tagging/pushing image"
+                exit 1
+            fi
+
+            MANIFEST_LIST=`docker manifest inspect ${dockerImageName}`
+
+            # Parse the manifest list to retrieve the SHA IDs for each architecture
+            SHA_IDS=()
+            for row in `echo "\${MANIFEST_LIST}" | jq -r '.manifests[] | @base64'`; do
+                architecture=`echo \${row} | base64 --decode | jq -r '.platform.architecture'`
+                digest=`echo \${row} | base64 --decode | jq -r '.digest'`
+
+                if [ "\${architecture}" == "amd64" ]; then
+                    echo "Architecture: \${architecture}, SHA ID: \${digest}"
+                    amd64_sha=\${digest}
+                elif [ "\${architecture}" == "arm64" ]; then
+                    echo "Architecture: \${architecture}, SHA ID: \${digest}"
+                    arm64_sha=\${digest}
+                fi
+            done
+
+            AMD_TAG="${dockerImageTag}-amd"
+            ARM_TAG="${dockerImageTag}-arm"
+
+            MANIFEST_AMD=\$(aws ecr batch-get-image --repository-name ${repositoryName} --image-ids imageDigest=\${amd64_sha} --region ${regionName} --output json | jq --raw-output --join-output '.images[0].imageManifest')
+            aws ecr put-image --repository-name ${repositoryName} --image-tag \${AMD_TAG} --image-manifest "\${MANIFEST_AMD}" --region ${regionName}
+            MANIFEST_ARM=\$(aws ecr batch-get-image --repository-name ${repositoryName} --image-ids imageDigest=\${arm64_sha} --region ${regionName} --output json | jq --raw-output --join-output '.images[0].imageManifest')
+            aws ecr put-image --repository-name ${repositoryName} --image-tag \${ARM_TAG} --image-manifest "\${MANIFEST_ARM}" --region ${regionName}
+        """
+    }
+}
+
+
 
