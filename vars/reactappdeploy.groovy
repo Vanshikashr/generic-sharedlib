@@ -1,15 +1,11 @@
-def call(envValue, branchValue, moduleValue, workspaceValue, s3BucketNameValue, s3BucketPathValue, regionNameValue, dockerImageNameValue, eksImageNameValue, commitIdValue, dockerImageTagValue, repositoryNameValue, helmBranchValue, helmRepoValue, kubeConfigValue) {
+def call( workspaceValue, s3BucketNameValue, s3BucketPathValue, regionNameValue, dockerImageNameValue, eksImageNameValue, commitIdValue, dockerImageTagValue, repositoryNameValue, helmBranchValue, helmRepoValue, kubeConfigValue) {
 
 pipeline {
     agent any
     parameters {
         choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
         choice(name: 'MODULE', choices: ['react'], description: 'Choose module to build')
-        string(name: 'BRANCH', defaultValue: 'NUD-27', description: 'Git Branch Name')
-        string(name: 'ENV', description: 'Environment')
-        string(name: 'BRANCH', description: 'Branch')
-        string(name: 'MODULE', description: 'Module')
-        string(name: 'WORKSPACE', description: 'Workspace path')
+       string(name: 'WORKSPACE', description: 'Workspace path')
         string(name: 'S3_BUCKET_NAME', description: 'S3 bucket name')
         string(name: 'S3_BUCKET_PATH', description: 'S3 bucket path')
         string(name: 'REGION_NAME', description: 'Region name')
