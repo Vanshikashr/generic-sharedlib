@@ -84,7 +84,7 @@ def dockerImagePush() {
     
 }
 // setting env. variables
-def setupEnvironments() {
+def setupEnvironments(BUILD_NUMBER,COMMIT_ID,DEFAULT_ENV,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMBER,REGION_NAME,ENV,BRANCH_NAME,IMAGE_NAME,DOCKER_IMAGE_TAG,EKS_IMAGE_TAG,EKS_PREFIX) {
     sh '''
     pwd
     ls -la
@@ -92,8 +92,8 @@ def setupEnvironments() {
     def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
     def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
 
-    def REPOSITORY_NAME = "${env.DEFAULT_ENV}-${env.DEFAULT_PROJECT_PREFIX}-${MODULE}"
-    def IMAGE_NAME = "${env.REPOSITORY_NUMBER}.dkr.ecr.${env.REGION_NAME}.amazonaws.com/${REPOSITORY_NAME}"
+    def REPOSITORY_NAME = "${DEFAULT_ENV}-${DEFAULT_PROJECT_PREFIX}-${MODULE}"
+    def IMAGE_NAME = "${REPOSITORY_NUMBER}.dkr.ecr.${REGION_NAME}.amazonaws.com/${REPOSITORY_NAME}"
 
     def DOCKER_IMAGE_TAG = "${ENV}_${BRANCH_NAME}_${COMMIT_ID}"
     def EKS_IMAGE_TAG = "${ENV}_latest"
