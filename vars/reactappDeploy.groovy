@@ -45,28 +45,29 @@ pipeline {
         
         stage("Pulling the Repository") {
             steps {
+                script {
                 utilities.pullRepository(params.BRANCH_NAME, env.GIT_URL)
+            }
             }
         }
         
         stage("Building the Artifacts") {
             steps {
+                script {
                 build.buildArtifacts(env.S3_BUCKET_NAME, env.S3_BUCKET_PATH, env.REGION_NAME)
+            }
             }
         }
         
         stage("Docker Image Push") {
             steps {
+
+                script {
                 utilities.dockerImagePush(
-                    
                     env.REGION_NAME,
-                    env.REPOSITORY_NUMBER,
-                    
-            
-                    
-                    
-               
+                    env.REPOSITORY_NUMBER
                 )
+                }
             }
         }
         
