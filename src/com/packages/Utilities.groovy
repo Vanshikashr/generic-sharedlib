@@ -3,7 +3,7 @@
 // helm deploy
 def helmInstall(String namespace, String release, String module, String dockerImageTag, String KUBE_CONFIG) {
     echo "Installing ${release} in ${namespace}"
-    script {
+   
         sh """#!/bin/bash
             set -xe
             cd $workspace/services
@@ -13,7 +13,7 @@ def helmInstall(String namespace, String release, String module, String dockerIm
             /root/bin/kubectl rollout status deployment ${module} --namespace ${namespace} --kubeconfig=${KUBE_CONFIG}
             sleep 120s
         """
-    }
+    
 }
 
 
@@ -27,16 +27,16 @@ def pullRepository(String branch, String env) {
     echo "Branch: ${branch}"
     echo "Environment: ${env}"
     
-    script {
+    
         def BRANCH_NAME = branch ?: env.DEFAULT_BRANCH
         
         git branch: "${BRANCH_NAME}", url: "${env.GIT_URL}", changelog: true, poll: true
-    }
+    
 }   
 
 // docker push
 def dockerImagePush(String workspace, String regionName, String repositoryNumber, String dockerImageName, String eksImageName, String commitId, String dockerImageTag, String repositoryName) {
-    script {
+
         sh """#!/bin/bash
             set -xe
             echo $workspace
@@ -81,7 +81,7 @@ def dockerImagePush(String workspace, String regionName, String repositoryNumber
             MANIFEST_ARM=\$(aws ecr batch-get-image --repository-name ${repositoryName} --image-ids imageDigest=\${arm64_sha} --region ${regionName} --output json | jq --raw-output --join-output '.images[0].imageManifest')
             aws ecr put-image --repository-name ${repositoryName} --image-tag \${ARM_TAG} --image-manifest "\${MANIFEST_ARM}" --region ${regionName}
         """
-    }
+    
 }
 // setting env. variables
 def setupEnvironments(String env, String branch, String module) {
