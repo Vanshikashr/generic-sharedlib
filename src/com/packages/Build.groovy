@@ -1,21 +1,21 @@
 // build done by whom and id and all
-def setBuildInfo(String env, String branch, String module) {
+def setBuildInfo() {
     wrap([$class: 'BuildUser']) {
       
             def changeLogSets = currentBuild.changeSets
-            currentBuild.displayName = "#${env}-#${branch}-#${currentBuild.number}"
-            currentBuild.description = "Module: ${module} \n Build By: ${BUILD_USER}"
+            currentBuild.displayName = "#${ENV}-#${BRANCH}"
+            currentBuild.description = "Module: ${MODULE}"
         
     }
 }
 
 // build artifact
-def buildArtifacts(String s3BucketName, String s3BucketPath, String regionName) {
+def buildArtifacts() {
     
         sh """#!/bin/bash
             set -xe
             echo $WORKSPACE
-            aws s3 cp s3://${s3BucketName}/${s3BucketPath} . --recursive --region ${regionName}
+            aws s3 cp s3://${S3_BUCKET_NAME}/${S3_BUCKET_PATH} . --recursive --region ${REGION_NAME}
         """
     
 }
