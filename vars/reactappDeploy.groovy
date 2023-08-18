@@ -27,26 +27,26 @@ pipeline {
         stage("Setting Build") {
             steps {
                 script {
-                   setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
+                   build.setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
                 }
             }
         }
         
         stage("Pulling the Repository") {
             steps {
-                pullRepository(params.BRANCH, params.ENV)
+                utilities.pullRepository(params.BRANCH, params.ENV)
             }
         }
         
         stage("Building the Artifacts") {
             steps {
-                buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
+                build.buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
             }
         }
         
         stage("Docker Image Push") {
             steps {
-                dockerImagePush(
+                utilities.dockerImagePush(
                     params.WORKSPACE,
                     params.REGION_NAME,
                     params.REPOSITORY_NUMBER,
@@ -61,7 +61,7 @@ pipeline {
         
         stage("Deploying App") {
             steps {
-                deployApp(
+                deploy.deployApp(
                     params.HELM_BRANCH,
                     params.HELM_REPO,
                     params.ENV,
@@ -74,7 +74,7 @@ pipeline {
        stage("Setting up the Environments") {
             steps {
                 script {
-                    def envData = setupEnvironments(params.ENV, params.BRANCH, params.MODULE)
+                    def envData = utilities.setupEnvironments(params.ENV, params.BRANCH, params.MODULE)
                     println("========================================================================")
                     println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
                     println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
