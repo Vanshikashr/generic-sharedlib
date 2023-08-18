@@ -21,7 +21,7 @@ pipeline {
         stage("Setting up the Environments") {
             steps {
                 script {
-                    def envData = utilities.setupEnvironments(params.ENV, params.BRANCH_NAME, params.MODULE)
+                    def envData = utilities.setupEnvironments()
                     println("========================================================================")
                     println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
                     println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
