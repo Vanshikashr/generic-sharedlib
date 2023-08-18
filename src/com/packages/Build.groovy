@@ -11,7 +11,7 @@ def setBuildInfo() {
 }
 
 // build artifact
-def buildArtifacts() {
+def buildArtifacts(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME) {
     
         sh """#!/bin/bash
             set -xe
