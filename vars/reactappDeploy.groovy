@@ -32,7 +32,7 @@ pipeline {
         stage("Pulling the Repository") {
             steps {
                 script {
-                utilities.pullRepository(params.BRANCH_NAME, env.GIT_URL)
+                utilities.pullRepository(GIT_URL)
             }
             }
         }
