@@ -93,7 +93,7 @@ def setupEnvironments(BUILD_NUMBER,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMB
     def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
     def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
 
-    def REPOSITORY_NAME = "${DEFAULT_ENV}-${DEFAULT_PROJECT_PREFIX}-${MODULE}"
+    def REPOSITORY_NAME = "${DEFAULT_PROJECT_PREFIX}-${MODULE}"
     def IMAGE_NAME = "${REPOSITORY_NUMBER}.dkr.ecr.${REGION_NAME}.amazonaws.com/${REPOSITORY_NAME}"
 
     def DOCKER_IMAGE_TAG = "${ENV}_${BRANCH_NAME}_${COMMIT_ID}"
