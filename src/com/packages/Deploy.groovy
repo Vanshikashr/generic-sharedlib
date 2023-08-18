@@ -1,8 +1,8 @@
 // deploy
-def deployApp(String helmBranch, String helmRepo, String env, String module, String dockerImageTag, String kubeConfig) {
+def deployApp() {
 
-        git branch: "${helmBranch}", url: "${helmRepo}", changelog: true, poll: true
-        helmInstall(env, "${env}-${module}", module, dockerImageTag, kubeConfig)
+        git branch: "${HELM_BRANCH}", url: "${HELM_REPO}", changelog: true, poll: true
+        helmInstall("${ENV}, "${ENV}-${MODULE}", MODULE, KUBE_CONFIG )
     
 }
 
