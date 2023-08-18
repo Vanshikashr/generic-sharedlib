@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                    
-                     utilities.setupEnvironments()
+                     utilities.setupEnvironments(BUILD_NUMBER,COMMIT_ID,DEFAULT_ENV,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMBER,REGION_NAME,ENV,BRANCH_NAME,IMAGE_NAME,DOCKER_IMAGE_TAG,EKS_IMAGE_TAG,EKS_PREFIX)
                   
                 }
             }
