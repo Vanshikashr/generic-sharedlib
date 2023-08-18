@@ -85,7 +85,7 @@ def dockerImagePush() {
 }
 // setting env. variables
 
-def setupEnvironments(BUILD_NUMBER,DEFAULT_ENV,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMBER,REGION_NAME,ENV,BRANCH_NAME) {
+def setupEnvironments(BUILD_NUMBER,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMBER,REGION_NAME,ENV,BRANCH_NAME) {
     sh '''
     pwd
     ls -la
