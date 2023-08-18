@@ -9,18 +9,7 @@ pipeline {
         choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
         choice(name: 'MODULE', choices: ['react'], description: 'Choose module to build')
         string(name: 'BRANCH', description: 'Branch')
-        string(name: 'GIT_URL', description: ' Giturl')
-        string(name: 'PROJECT_PREFIX', description: 'prefix')
-        string(name: 'S3_BUCKET_NAME', description: 'S3 bucket name')
-        string(name: 'S3_BUCKET_PATH', description: 'S3 bucket path')
-        string(name: 'REGION_NAME', description: 'Region name')
         
-       
-        string(name: 'REPOSITORY_NUMBER', description: 'Repository number')
-        string(name: 'HELM_BRANCH', description: 'Helm branch')
-        string(name: 'HELM_REPO', description: 'Helm repository URL')
-    
-        string(name: 'KUBE_CONFIG', description: 'Kube config')
        
     }
   stages {
@@ -34,13 +23,13 @@ pipeline {
         
         stage("Pulling the Repository") {
             steps {
-                pullRepository(params.BRANCH, params.GIT_URL)
+                pullRepository(params.BRANCH, env.GIT_URL)
             }
         }
         
         stage("Building the Artifacts") {
             steps {
-                buildArtifacts(params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
+                buildArtifacts(env.S3_BUCKET_NAME, env.S3_BUCKET_PATH, env.REGION_NAME)
             }
         }
         
@@ -48,8 +37,8 @@ pipeline {
             steps {
                 dockerImagePush(
                     
-                    params.REGION_NAME,
-                    params.REPOSITORY_NUMBER,
+                    env.REGION_NAME,
+                    env.REPOSITORY_NUMBER,
                     
             
                     
@@ -62,12 +51,12 @@ pipeline {
         stage("Deploying App") {
             steps {
                 deployApp(
-                    params.HELM_BRANCH,
-                    params.HELM_REPO,
+                    env.HELM_BRANCH,
+                    env.HELM_REPO,
                     params.ENV,
                     params.MODULE,
                  
-                    params.KUBE_CONFIG
+                    env.KUBE_CONFIG
                 )
             }
         }
