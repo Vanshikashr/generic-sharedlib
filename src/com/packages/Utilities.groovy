@@ -102,21 +102,19 @@ def setupEnvironments(BUILD_NUMBER,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMB
     def DOCKER_IMAGE_NAME = "${IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
     def EKS_IMAGE_NAME = "${IMAGE_NAME}:${EKS_IMAGE_TAG}"
 
-    def CLUSTER_NAME = "${ENV}-${env.DEFAULT_PROJECT_PREFIX}"
-    def EKS_PREFIX = "${ENV}-${env.DEFAULT_PROJECT_PREFIX}-${MODULE}"
+    def CLUSTER_NAME = "${ENV}-${DEFAULT_PROJECT_PREFIX}"
+    def EKS_PREFIX = "${ENV}-${DEFAULT_PROJECT_PREFIX}-${MODULE}"
     def TASK_NAME = "${EKS_PREFIX}"
     def SERVICE_NAME = "${EKS_PREFIX}"
 
-      return [
-        ARTIFACT_VERSION: ARTIFACT_VERSION,
-        REPOSITORY_NAME: REPOSITORY_NAME,
-        IMAGE_NAME: IMAGE_NAME,
-        DOCKER_IMAGE_NAME: DOCKER_IMAGE_NAME,
-        EKS_IMAGE_NAME: EKS_IMAGE_NAME,
-        CLUSTER_NAME: CLUSTER_NAME,
-        TASK_NAME: TASK_NAME,
-        SERVICE_NAME: SERVICE_NAME
-    ]
+     println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
+                    println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
+                    println("IMAGE_NAME: " + envData.IMAGE_NAME)
+                    println("DOCKER_IMAGE_NAME: " + envData.DOCKER_IMAGE_NAME)
+                    println("EKS_IMAGE_NAME: " + envData.EKS_IMAGE_NAME)
+                    println("CLUSTER_NAME: " + envData.CLUSTER_NAME)
+                    println("TASK_NAME: " + envData.TASK_NAME)
+                    println("SERVICE_NAME: " + envData.SERVICE_NAME)
     
 }
 
