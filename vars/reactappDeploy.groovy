@@ -1,6 +1,6 @@
 
 
-def call( String ENV , String DEFAULT_ENV = "non-prod", String BRANCH_NAME, String MODULE, String DEFAULT_PROJECT_PREFIX, String REGION_NAME, String REPOSITORY_NUMBER, String GIT_URL, String S3_BUCKET_NAME, String S3_BUCKET_PATH, String HELM_REPO, String HELM_BRANCH, String KUBE_CONFIG) {
+def call( String ENV , String DEFAULT_ENV , String BRANCH_NAME, String MODULE, String DEFAULT_PROJECT_PREFIX, String REGION_NAME, String REPOSITORY_NUMBER, String GIT_URL, String S3_BUCKET_NAME, String S3_BUCKET_PATH, String HELM_REPO, String HELM_BRANCH, String KUBE_CONFIG) {
 
 
 pipeline {
