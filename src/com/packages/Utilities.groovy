@@ -107,15 +107,18 @@ def setupEnvironments(BUILD_NUMBER,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMB
     def TASK_NAME = "${EKS_PREFIX}"
     def SERVICE_NAME = "${EKS_PREFIX}"
 
-     println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
-                    println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
-                    println("IMAGE_NAME: " + envData.IMAGE_NAME)
-                    println("DOCKER_IMAGE_NAME: " + envData.DOCKER_IMAGE_NAME)
-                    println("EKS_IMAGE_NAME: " + envData.EKS_IMAGE_NAME)
-                    println("CLUSTER_NAME: " + envData.CLUSTER_NAME)
-                    println("TASK_NAME: " + envData.TASK_NAME)
-                    println("SERVICE_NAME: " + envData.SERVICE_NAME)
     
+     
+    println "ARTIFACT_VERSION: $ARTIFACT_VERSION" 
+    println "REPOSITORY_NAME: $REPOSITORY_NAME" 
+    println "IMAGE_NAME: $IMAGE_NAME" 
+    println "DOCKER_IMAGE_NAME: $DOCKER_IMAGE_NAME" 
+    println "CLUSTER_NAME: $CLUSTER_NAME" 
+    println "EKS_IMAGE_NAME: $EKS_IMAGE_NAME" 
+    println "TASK_NAME: $TASK_NAME"
+    println "SERVICE_NAME: $SERVICE_NAME" 
+                
+                   
 }
 
 
