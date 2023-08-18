@@ -39,17 +39,9 @@ pipeline {
       stage("Setting up the Environments") {
             steps {
                 script {
-                    println("==========================HERE========================")
-                    def envData = utilities.setupEnvironments()
-                    println("========================================================================")
-                    println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
-                    println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
-                    println("IMAGE_NAME: " + envData.IMAGE_NAME)
-                    println("DOCKER_IMAGE_NAME: " + envData.DOCKER_IMAGE_NAME)
-                    println("EKS_IMAGE_NAME: " + envData.EKS_IMAGE_NAME)
-                    println("CLUSTER_NAME: " + envData.CLUSTER_NAME)
-                    println("TASK_NAME: " + envData.TASK_NAME)
-                    println("SERVICE_NAME: " + envData.SERVICE_NAME)
+                   
+                     utilities.setupEnvironments()
+                  
                 }
             }
         }
@@ -57,7 +49,7 @@ pipeline {
         stage("Building the Artifacts") {
             steps {
                 script {
-                build.buildArtifacts(env.S3_BUCKET_NAME, env.S3_BUCKET_PATH, env.REGION_NAME)
+                build.buildArtifacts(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME)
             }
             }
         }
