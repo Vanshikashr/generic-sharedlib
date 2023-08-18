@@ -1,6 +1,6 @@
 
 
-def call(envValue, branchValue, moduleValue, workspaceValue, s3BucketNameValue, s3BucketPathValue, regionNameValue, dockerImageNameValue, eksImageNameValue, commitIdValue, dockerImageTagValue, repositoryNameValue, helmBranchValue, helmRepoValue, kubeConfigValue) {
+def call( DEFAULT_ENV , DEFAULT_BRANCH, DEFAULT_PROJECT_PREFIX, REGION_NAME, REPOSITORY_NUMBER, GIT_URL, S3_BUCKET_NAME, S3_BUCKET_PATH, HELM_REPO, HELM_BRANCH, KUBE_CONFIG) {
 
 
 pipeline {
