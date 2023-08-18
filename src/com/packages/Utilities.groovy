@@ -1,16 +1,16 @@
 
 
 // helm deploy
-def helmInstall(String namespace, String release, String module, String dockerImageTag, String KUBE_CONFIG) {
+def helmInstall(){
     echo "Installing ${release} in ${namespace}"
    
         sh """#!/bin/bash
             set -xe
-            cd $workspace/services
+            cd $WORKSPACE/services
             ls
             aws eks --region ap-south-1 update-kubeconfig --kubeconfig=${KUBE_CONFIG} --name non-prod-eupi-eks
             /usr/local/bin/helm upgrade --install --namespace ${namespace} --kubeconfig=${KUBE_CONFIG} ${release} --set image.tag=${dockerImageTag} -f ./${module}/values-${namespace}.yaml ./${module}
-            /root/bin/kubectl rollout status deployment ${module} --namespace ${namespace} --kubeconfig=${KUBE_CONFIG}
+            /root/bin/kubectl rollout status deployment ${MODULE} --namespace ${namespace} --kubeconfig=${KUBE_CONFIG}
             sleep 120s
         """
     
@@ -23,9 +23,9 @@ def cleanWorkspace() {
 }
 
 // clone repository
-def pullRepository(String branch, String env) {
-    echo "Branch: ${branch}"
-    echo "Environment: ${env}"
+def pullRepository() {
+    echo "Branch: ${BRANCH_NAME}"
+    echo "Environment: ${ENV}"
     
     
         def BRANCH_NAME = branch ?: env.DEFAULT_BRANCH
@@ -35,28 +35,28 @@ def pullRepository(String branch, String env) {
 }   
 
 // docker push
-def dockerImagePush(String workspace, String regionName, String repositoryNumber, String dockerImageName, String eksImageName, String commitId, String dockerImageTag, String repositoryName) {
+def dockerImagePush() {
 
         sh """#!/bin/bash
             set -xe
-            echo $workspace
+            echo $WORKSPACE
 
             echo "Docker Image Push"
-            aws ecr get-login-password --region ${regionName} | docker login --username AWS --password-stdin ${repositoryNumber}.dkr.ecr.${regionName}.amazonaws.com
-            docker rmi -f ${dockerImageName}
-            docker buildx build --platform linux/amd64,linux/arm64 --provenance=false -f Dockerfile --build-arg artifact_version=${commitId} -t ${dockerImageName} -t ${eksImageName} --push .
+            aws ecr get-login-password --region ${REGION_NAME} | docker login --username AWS --password-stdin ${REPOSITORY_NUMBER}.dkr.ecr.${REGION_NAME}.amazonaws.com
+            docker rmi -f ${DOCKER_IMAGE_NAME}
+            docker buildx build --platform linux/amd64,linux/arm64 --provenance=false -f Dockerfile --build-arg artifact_version=${COMMIT_ID} -t ${DOCKER_IMAGE_NAME} -t ${ EKS_IMAGE_NAME } --push .
 
             if [ \$? -eq 0 ]
             then
                 echo "Successfully image tagged and pushed to repository"
-                echo ${dockerImageName} > $workspace/image_id
-                cat $workspace/image_id
+                echo ${DOCKER_IMAGE_NAME} > $WORKSPACE/image_id
+                cat $WORKSPACE/image_id
             else
                 echo "Error in tagging/pushing image"
                 exit 1
             fi
 
-            MANIFEST_LIST=`docker manifest inspect ${dockerImageName}`
+            MANIFEST_LIST=`docker manifest inspect ${DOCKER_IMAGE_NAME}`
 
             # Parse the manifest list to retrieve the SHA IDs for each architecture
             SHA_IDS=()
@@ -73,32 +73,32 @@ def dockerImagePush(String workspace, String regionName, String repositoryNumber
                 fi
             done
 
-            AMD_TAG="${dockerImageTag}-amd"
-            ARM_TAG="${dockerImageTag}-arm"
+            AMD_TAG="${DOCKER_IMAGE_TAG}-amd"
+            ARM_TAG="${DOCKER_IMAGE_TAG}-arm"
 
-            MANIFEST_AMD=\$(aws ecr batch-get-image --repository-name ${repositoryName} --image-ids imageDigest=\${amd64_sha} --region ${regionName} --output json | jq --raw-output --join-output '.images[0].imageManifest')
-            aws ecr put-image --repository-name ${repositoryName} --image-tag \${AMD_TAG} --image-manifest "\${MANIFEST_AMD}" --region ${regionName}
-            MANIFEST_ARM=\$(aws ecr batch-get-image --repository-name ${repositoryName} --image-ids imageDigest=\${arm64_sha} --region ${regionName} --output json | jq --raw-output --join-output '.images[0].imageManifest')
-            aws ecr put-image --repository-name ${repositoryName} --image-tag \${ARM_TAG} --image-manifest "\${MANIFEST_ARM}" --region ${regionName}
+            MANIFEST_AMD=\$(aws ecr batch-get-image --repository-name ${REPOSITORY_NAME} --image-ids imageDigest=\${amd64_sha} --region ${REGION_NAME} --output json | jq --raw-output --join-output '.images[0].imageManifest')
+            aws ecr put-image --repository-name ${REPOSITORY_NAME} --image-tag \${AMD_TAG} --image-manifest "\${MANIFEST_AMD}" --region ${REGION_NAME}
+            MANIFEST_ARM=\$(aws ecr batch-get-image --repository-name ${REPOSITORY_NAME} --image-ids imageDigest=\${arm64_sha} --region ${REGION_NAME} --output json | jq --raw-output --join-output '.images[0].imageManifest')
+            aws ecr put-image --repository-name ${REPOSITORY_NAME} --image-tag \${ARM_TAG} --image-manifest "\${MANIFEST_ARM}" --region ${REGION_NAME}
         """
     
 }
 // setting env. variables
-def setupEnvironments(String env, String branch, String module) {
+def setupEnvironments() {
     def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
     def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
 
-    def REPOSITORY_NAME = "${env.DEFAULT_ENV}-${env.DEFAULT_PROJECT_PREFIX}-${module}"
+    def REPOSITORY_NAME = "${env.DEFAULT_ENV}-${env.DEFAULT_PROJECT_PREFIX}-${MODULE}"
     def IMAGE_NAME = "${env.REPOSITORY_NUMBER}.dkr.ecr.${env.REGION_NAME}.amazonaws.com/${REPOSITORY_NAME}"
 
-    def DOCKER_IMAGE_TAG = "${env}_${branch}_${COMMIT_ID}"
-    def EKS_IMAGE_TAG = "${env}_latest"
+    def DOCKER_IMAGE_TAG = "${ENV}_${branch}_${COMMIT_ID}"
+    def EKS_IMAGE_TAG = "${ENV}_latest"
 
     def DOCKER_IMAGE_NAME = "${IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
     def EKS_IMAGE_NAME = "${IMAGE_NAME}:${EKS_IMAGE_TAG}"
 
-    def CLUSTER_NAME = "${env}-${env.DEFAULT_PROJECT_PREFIX}"
-    def EKS_PREFIX = "${env}-${env.DEFAULT_PROJECT_PREFIX}-${module}"
+    def CLUSTER_NAME = "${ENV}-${env.DEFAULT_PROJECT_PREFIX}"
+    def EKS_PREFIX = "${ENV}-${env.DEFAULT_PROJECT_PREFIX}-${MODULE}"
     def TASK_NAME = "${EKS_PREFIX}"
     def SERVICE_NAME = "${EKS_PREFIX}"
 
