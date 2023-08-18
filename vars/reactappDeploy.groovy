@@ -22,7 +22,7 @@ pipeline {
                     sh '''
                     echo "hello from Build Info Step"
                     '''
-                  build.setBuildInfo(params.ENV, params.BRANCH_NAME, params.MODULE)
+                  setBuildInfo(params.ENV, params.BRANCH_NAME, params.MODULE)
                 }
             }
         }
