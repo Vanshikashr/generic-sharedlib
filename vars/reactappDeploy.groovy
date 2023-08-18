@@ -1,6 +1,6 @@
 
 
-def call( String ENV , String BRANCH, String MODULE, String DEFAULT_PROJECT_PREFIX, String REGION_NAME, String REPOSITORY_NUMBER, String GIT_URL, String S3_BUCKET_NAME, String S3_BUCKET_PATH, String HELM_REPO, String HELM_BRANCH, String KUBE_CONFIG) {
+def call( String ENV , String BRANCH_NAME, String MODULE, String DEFAULT_PROJECT_PREFIX, String REGION_NAME, String REPOSITORY_NUMBER, String GIT_URL, String S3_BUCKET_NAME, String S3_BUCKET_PATH, String HELM_REPO, String HELM_BRANCH, String KUBE_CONFIG) {
 
 
 pipeline {
@@ -16,14 +16,14 @@ pipeline {
         stage("Setting Build") {
             steps {
                 script {
-                   setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
+                   setBuildInfo(params.ENV, params.BRANCH_NAME, params.MODULE)
                 }
             }
         }
         
         stage("Pulling the Repository") {
             steps {
-                pullRepository(params.BRANCH, env.GIT_URL)
+                pullRepository(params.BRANCH_NAME, env.GIT_URL)
             }
         }
         
@@ -63,7 +63,7 @@ pipeline {
        stage("Setting up the Environments") {
             steps {
                 script {
-                    def envData = utilities.setupEnvironments(params.ENV, params.BRANCH, params.MODULE)
+                    def envData = utilities.setupEnvironments(params.ENV, params.BRANCH_NAME, params.MODULE)
                     println("========================================================================")
                     println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
                     println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
