@@ -87,6 +87,7 @@ def dockerImagePush() {
 def setupEnvironments() {
     sh '''
     pwd
+    ls -la
     '''
     def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
     def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
