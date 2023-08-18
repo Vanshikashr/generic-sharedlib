@@ -1,5 +1,5 @@
 // build done by whom and id and all
-def setBuildInfo(String ENV, String BRANCH, String MODULE) {
+def setBuildInfo() {
     wrap([$class: 'BuildUser']) {
       
             def changeLogSets = currentBuild.changeSets
@@ -10,7 +10,7 @@ def setBuildInfo(String ENV, String BRANCH, String MODULE) {
 }
 
 // build artifact
-def buildArtifacts(String S3_BUCKET_NAME, String S3_BUCKET_PATH, String REGION_NAME) {
+def buildArtifacts() {
     
         sh """#!/bin/bash
             set -xe
