@@ -1,7 +1,7 @@
 
 
 // helm deploy
-def helmInstall(){
+def helmInstall(String namespace, String release, String MODULE, String , String KUBE_CONFIG){
     echo "Installing ${release} in ${namespace}"
    
         sh """#!/bin/bash
@@ -9,7 +9,7 @@ def helmInstall(){
             cd $WORKSPACE/services
             ls
             aws eks --region ap-south-1 update-kubeconfig --kubeconfig=${KUBE_CONFIG} --name non-prod-eupi-eks
-            /usr/local/bin/helm upgrade --install --namespace ${namespace} --kubeconfig=${KUBE_CONFIG} ${release} --set image.tag=${dockerImageTag} -f ./${module}/values-${namespace}.yaml ./${module}
+            /usr/local/bin/helm upgrade --install --namespace ${namespace} --kubeconfig=${KUBE_CONFIG} ${release} --set image.tag=${DOCKER_IMAGE_TAG} -f ./${MODULE}/values-${namespace}.yaml ./${MODULE}
             /root/bin/kubectl rollout status deployment ${MODULE} --namespace ${namespace} --kubeconfig=${KUBE_CONFIG}
             sleep 120s
         """
@@ -23,7 +23,7 @@ def cleanWorkspace() {
 }
 
 // clone repository
-def pullRepository() {
+def pullRepository(String BRANCH_NAME, String ENV) {
     echo "Branch: ${BRANCH_NAME}"
     echo "Environment: ${ENV}"
     
@@ -35,7 +35,7 @@ def pullRepository() {
 }   
 
 // docker push
-def dockerImagePush() {
+def dockerImagePush(String REGION_NAME, String REPOSITORY_NUMBER, String DOCKER_IMAGE_NAME, String  EKS_IMAGE_NAME, String COMMIT_ID, String DOCKER_IMAGE_TAG, String REPOSITORY_NAME) {
 
         sh """#!/bin/bash
             set -xe
@@ -84,14 +84,14 @@ def dockerImagePush() {
     
 }
 // setting env. variables
-def setupEnvironments() {
+def setupEnvironments(String ENV, String BRANCH_NAME, String MODULE) {
     def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
     def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
 
     def REPOSITORY_NAME = "${env.DEFAULT_ENV}-${env.DEFAULT_PROJECT_PREFIX}-${MODULE}"
     def IMAGE_NAME = "${env.REPOSITORY_NUMBER}.dkr.ecr.${env.REGION_NAME}.amazonaws.com/${REPOSITORY_NAME}"
 
-    def DOCKER_IMAGE_TAG = "${ENV}_${branch}_${COMMIT_ID}"
+    def DOCKER_IMAGE_TAG = "${ENV}_${BRANCH_NAME}_${COMMIT_ID}"
     def EKS_IMAGE_TAG = "${ENV}_latest"
 
     def DOCKER_IMAGE_NAME = "${IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
