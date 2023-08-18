@@ -1,13 +1,7 @@
-#!/usr/bin/groovy
 
-import com.packages.Utilities
-import com.packages.Build
-import com.packages.Deploy
+def call(envValue, branchValue, moduleValue, workspaceValue, s3BucketNameValue, s3BucketPathValue, regionNameValue, dockerImageNameValue, eksImageNameValue, commitIdValue, dockerImageTagValue, repositoryNameValue, helmBranchValue, helmRepoValue, kubeConfigValue) {
 
-    def call() {
-deploy = new Deploy()
-    build = new Build()
-    utilities = new Utilities()
+
 pipeline {
     agent any
     parameters {
@@ -33,26 +27,26 @@ pipeline {
         stage("Setting Build") {
             steps {
                 script {
-                   build.setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
+                   setBuildInfo(params.ENV, params.BRANCH, params.MODULE)
                 }
             }
         }
         
         stage("Pulling the Repository") {
             steps {
-                utilities.pullRepository(params.BRANCH, params.ENV)
+                pullRepository(params.BRANCH, params.ENV)
             }
         }
         
         stage("Building the Artifacts") {
             steps {
-                build.buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
+                buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
             }
         }
         
         stage("Docker Image Push") {
             steps {
-                utilities.dockerImagePush(
+                dockerImagePush(
                     params.WORKSPACE,
                     params.REGION_NAME,
                     params.REPOSITORY_NUMBER,
@@ -67,7 +61,7 @@ pipeline {
         
         stage("Deploying App") {
             steps {
-                deploy.deployApp(
+                deployApp(
                     params.HELM_BRANCH,
                     params.HELM_REPO,
                     params.ENV,
@@ -80,7 +74,7 @@ pipeline {
        stage("Setting up the Environments") {
             steps {
                 script {
-                    def envData = utilities.setupEnvironments(params.ENV, params.BRANCH, params.MODULE)
+                    def envData = setupEnvironments(params.ENV, params.BRANCH, params.MODULE)
                     println("========================================================================")
                     println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
                     println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
