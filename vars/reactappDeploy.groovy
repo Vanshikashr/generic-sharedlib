@@ -16,26 +16,26 @@ pipeline {
         stage("Setting Build") {
             steps {
                 script {
-                   setBuildInfo(params.ENV, params.BRANCH_NAME, params.MODULE)
+                  build.setBuildInfo(params.ENV, params.BRANCH_NAME, params.MODULE)
                 }
             }
         }
         
         stage("Pulling the Repository") {
             steps {
-                pullRepository(params.BRANCH_NAME, env.GIT_URL)
+                utilities.pullRepository(params.BRANCH_NAME, env.GIT_URL)
             }
         }
         
         stage("Building the Artifacts") {
             steps {
-                buildArtifacts(env.S3_BUCKET_NAME, env.S3_BUCKET_PATH, env.REGION_NAME)
+                build.buildArtifacts(env.S3_BUCKET_NAME, env.S3_BUCKET_PATH, env.REGION_NAME)
             }
         }
         
         stage("Docker Image Push") {
             steps {
-                dockerImagePush(
+                utilities.dockerImagePush(
                     
                     env.REGION_NAME,
                     env.REPOSITORY_NUMBER,
@@ -50,7 +50,7 @@ pipeline {
         
         stage("Deploying App") {
             steps {
-                deployApp(
+                deploy.deployApp(
                     env.HELM_BRANCH,
                     env.HELM_REPO,
                     params.ENV,
