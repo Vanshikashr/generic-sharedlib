@@ -54,18 +54,7 @@ pipeline {
             }
         }
         
-        stage("Deploying App") {
-            steps {
-                deployApp(
-                    env.HELM_BRANCH,
-                    env.HELM_REPO,
-                    params.ENV,
-                    params.MODULE,
-                 
-                    env.KUBE_CONFIG
-                )
-            }
-        }
+      
        stage("Setting up the Environments") {
             steps {
                 script {
