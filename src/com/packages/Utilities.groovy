@@ -1,7 +1,7 @@
 
 
 // helm deploy
-def helmInstall(String namespace, String release, String MODULE, String , String KUBE_CONFIG){
+def helmInstall(){
     echo "Installing ${release} in ${namespace}"
    
         sh """#!/bin/bash
@@ -23,7 +23,7 @@ def cleanWorkspace() {
 }
 
 // clone repository
-def pullRepository(String BRANCH_NAME, String ENV) {
+def pullRepository() {
     echo "Branch: ${BRANCH_NAME}"
     echo "Environment: ${ENV}"
     
@@ -35,7 +35,7 @@ def pullRepository(String BRANCH_NAME, String ENV) {
 }   
 
 // docker push
-def dockerImagePush(String REGION_NAME, String REPOSITORY_NUMBER, String DOCKER_IMAGE_NAME, String  EKS_IMAGE_NAME, String COMMIT_ID, String DOCKER_IMAGE_TAG, String REPOSITORY_NAME) {
+def dockerImagePush() {
 
         sh """#!/bin/bash
             set -xe
@@ -84,7 +84,7 @@ def dockerImagePush(String REGION_NAME, String REPOSITORY_NUMBER, String DOCKER_
     
 }
 // setting env. variables
-def setupEnvironments(String ENV, String BRANCH_NAME, String MODULE) {
+def setupEnvironments() {
     def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
     def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
 
