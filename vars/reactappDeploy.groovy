@@ -8,19 +8,18 @@ pipeline {
     parameters {
         choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
         choice(name: 'MODULE', choices: ['react'], description: 'Choose module to build')
-        choice(name: 'BRANCH', choices: ['NUD-27','main','alpha-test'], description: 'Git Branch Name')
-       string(name: 'WORKSPACE', description: 'Workspace path')
+        string(name: 'BRANCH', description: 'Branch')
+        string(name: 'GIT_URL', description: ' Giturl')
+        string(name: 'PROJECT_PREFIX', description: 'prefix')
         string(name: 'S3_BUCKET_NAME', description: 'S3 bucket name')
         string(name: 'S3_BUCKET_PATH', description: 'S3 bucket path')
         string(name: 'REGION_NAME', description: 'Region name')
-        string(name: 'DOCKER_IMAGE_NAME', description: 'Docker image name')
-        string(name: 'EKS_IMAGE_NAME', description: 'EKS image name')
-        string(name: 'COMMIT_ID', description: 'Commit ID')
-        string(name: 'DOCKER_IMAGE_TAG', description: 'Docker image tag')
-        string(name: 'REPOSITORY_NAME', description: 'Repository name')
+        
+       
+        string(name: 'REPOSITORY_NUMBER', description: 'Repository number')
         string(name: 'HELM_BRANCH', description: 'Helm branch')
         string(name: 'HELM_REPO', description: 'Helm repository URL')
-        string(name: 'DOCKER_IMAGE_TAG', description: 'Docker image tag')
+    
         string(name: 'KUBE_CONFIG', description: 'Kube config')
        
     }
@@ -35,27 +34,27 @@ pipeline {
         
         stage("Pulling the Repository") {
             steps {
-                pullRepository(params.BRANCH, params.ENV)
+                pullRepository(params.BRANCH, params.GIT_URL)
             }
         }
         
         stage("Building the Artifacts") {
             steps {
-                buildArtifacts(params.WORKSPACE, params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
+                buildArtifacts(params.S3_BUCKET_NAME, params.S3_BUCKET_PATH, params.REGION_NAME)
             }
         }
         
         stage("Docker Image Push") {
             steps {
                 dockerImagePush(
-                    params.WORKSPACE,
+                    
                     params.REGION_NAME,
                     params.REPOSITORY_NUMBER,
-                    params.DOCKER_IMAGE_NAME,
-                    params.EKS_IMAGE_NAME,
-                    params.COMMIT_ID,
-                    params.DOCKER_IMAGE_TAG,
-                    params.REPOSITORY_NAME
+                    
+            
+                    
+                    
+               
                 )
             }
         }
@@ -67,7 +66,7 @@ pipeline {
                     params.HELM_REPO,
                     params.ENV,
                     params.MODULE,
-                    params.DOCKER_IMAGE_TAG,
+                 
                     params.KUBE_CONFIG
                 )
             }
