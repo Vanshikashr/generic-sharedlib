@@ -10,11 +10,11 @@ def setBuildInfo(String env, String branch, String module) {
 }
 
 // build artifact
-def buildArtifacts(String workspace, String s3BucketName, String s3BucketPath, String regionName) {
+def buildArtifacts(String s3BucketName, String s3BucketPath, String regionName) {
     
         sh """#!/bin/bash
             set -xe
-            echo $workspace
+            echo $WORKSPACE
             aws s3 cp s3://${s3BucketName}/${s3BucketPath} . --recursive --region ${regionName}
         """
     
