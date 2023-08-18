@@ -16,32 +16,48 @@ pipeline {
        
     }
   stages {
+        stage("Setting up the Environments") {
+            steps {
+                script {
+                    def envData = utilities.setupEnvironments(params.ENV, params.BRANCH_NAME, params.MODULE)
+                    println("========================================================================")
+                    println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
+                    println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
+                    println("IMAGE_NAME: " + envData.IMAGE_NAME)
+                    println("DOCKER_IMAGE_NAME: " + envData.DOCKER_IMAGE_NAME)
+                    println("EKS_IMAGE_NAME: " + envData.EKS_IMAGE_NAME)
+                    println("CLUSTER_NAME: " + envData.CLUSTER_NAME)
+                    println("TASK_NAME: " + envData.TASK_NAME)
+                    println("SERVICE_NAME: " + envData.SERVICE_NAME)
+                }
+            }
+        }
         stage("Setting Build") {
             steps {
                 script {
                     sh '''
                     echo "hello from Build Info Step"
                     '''
-                  setBuildInfo(params.ENV, params.BRANCH_NAME, params.MODULE)
+                  build.setBuildInfo(params.ENV, params.BRANCH_NAME, params.MODULE)
                 }
             }
         }
         
         stage("Pulling the Repository") {
             steps {
-                pullRepository(params.BRANCH_NAME, env.GIT_URL)
+                utilities.pullRepository(params.BRANCH_NAME, env.GIT_URL)
             }
         }
         
         stage("Building the Artifacts") {
             steps {
-                buildArtifacts(env.S3_BUCKET_NAME, env.S3_BUCKET_PATH, env.REGION_NAME)
+                build.buildArtifacts(env.S3_BUCKET_NAME, env.S3_BUCKET_PATH, env.REGION_NAME)
             }
         }
         
         stage("Docker Image Push") {
             steps {
-                dockerImagePush(
+                utilities.dockerImagePush(
                     
                     env.REGION_NAME,
                     env.REPOSITORY_NUMBER,
@@ -55,22 +71,7 @@ pipeline {
         }
         
       
-       stage("Setting up the Environments") {
-            steps {
-                script {
-                    def envData = setupEnvironments(params.ENV, params.BRANCH_NAME, params.MODULE)
-                    println("========================================================================")
-                    println("ARTIFACT_VERSION: " + envData.ARTIFACT_VERSION)
-                    println("REPOSITORY_NAME: " + envData.REPOSITORY_NAME)
-                    println("IMAGE_NAME: " + envData.IMAGE_NAME)
-                    println("DOCKER_IMAGE_NAME: " + envData.DOCKER_IMAGE_NAME)
-                    println("EKS_IMAGE_NAME: " + envData.EKS_IMAGE_NAME)
-                    println("CLUSTER_NAME: " + envData.CLUSTER_NAME)
-                    println("TASK_NAME: " + envData.TASK_NAME)
-                    println("SERVICE_NAME: " + envData.SERVICE_NAME)
-                }
-            }
-        }
+     
         
   } 
     }
