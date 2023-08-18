@@ -23,14 +23,14 @@ def cleanWorkspace() {
 }
 
 // clone repository
-def pullRepository() {
+def pullRepository(GIT_URL,BRANCH_NAME) {
     echo "Branch: ${BRANCH_NAME}"
-    echo "Environment: ${ENV}"
+    //echo "Environment: ${ENV}"
     
     
-        def BRANCH_NAME = branch ?: env.DEFAULT_BRANCH
+       // def BRANCH_NAME = branch ?: env.DEFAULT_BRANCH
         
-        git branch: "${BRANCH_NAME}", url: "${env.GIT_URL}", changelog: true, poll: true
+        git branch: "${BRANCH_NAME}", url: "${GIT_URL}", changelog: true, poll: true
     
 }   
 
