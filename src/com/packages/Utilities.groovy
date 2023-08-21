@@ -35,7 +35,7 @@ def pullRepository(GIT_URL,BRANCH_NAME) {
 }   
 
 // docker push
-def dockerImagePush(REGION_NAME,REPOSITORY_NUMBER,REPOSITORY_NAME) {
+def dockerImagePush(REGION_NAME,REPOSITORY_NUMBER) {
 
         sh """#!/bin/bash
             set -xe
