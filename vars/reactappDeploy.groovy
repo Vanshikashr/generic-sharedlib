@@ -8,6 +8,7 @@ def call( ENV ,  BRANCH_NAME, MODULE,  DEFAULT_PROJECT_PREFIX,  REGION_NAME, REP
 {
     build = new Build()
     utilities = new Utilities()
+    deploy = new Deploy()
 pipeline {
     agent any
     parameters {
