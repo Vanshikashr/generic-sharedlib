@@ -64,9 +64,17 @@ pipeline {
             }
         }
         
-      
+         stage("Deploy") {
+            steps {
+
+                script {
+                deploy.deployApp(HELM_BRANCH,HELM_REPO,ENV,MODULE,KUBE_CONFIG)
      
         
   } 
     }
+}
+      
+  }
+}
 }
