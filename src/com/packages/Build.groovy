@@ -1,20 +1,14 @@
 package com.packages
-def dockerBuild() {
+def dockerBuild(containerRegistoryUrl, appName,S3_BUCKET_NAME, S3_BUCKET_PATH,S3_BUCKET_PATH) {
     def containerRegistoryUrl = env.containerRegistoryUrl
-    def appName =  env.appName
-    def dockerFilePath = env.dockerFilePath != 'null' ? env.dockerFilePath : 'docker/Dockerfile'
-    println("Docker file path: " + dockerFilePath)
-    if (fileExists(dockerFilePath)){
-    // Define Docker image name and tag
+    def appName =  params.appName
+
     branchName = "$GIT_BRANCH" 
     def dockerImageName = "${containerRegistoryUrl}/${appName}:${dockerImageTag}"
     def dockerEnvTag = "${containerRegistoryUrl}/${appName}:${branchName}-latest"
     // Build Docker image
-    sh "docker build -t ${dockerImageName} -t ${dockerEnvTag} -f ${dockerFilePath} ."
-    // sh "docker tag ${dockerImageName} ${dockerImageName2}"
+    sh "aws s3 cp s3://${S3_BUCKET_NAME}/${S3_BUCKET_PATH} . --recursive --region  ${REGION_NAME}
+    sh "docker build -t ${dockerImageName} -t ${dockerEnvTag} -f Dockerfile ."
+ 
     
-    }
-    else{
-      error 'Dockerfile does not exist on given path.'
-    }
 }
