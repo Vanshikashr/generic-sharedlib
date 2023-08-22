@@ -25,7 +25,7 @@ def pullRepository(BRANCH_NAME,ENV,DEFAULT_BRANCH,MODULE) {
     echo "Branch: ${BRANCH_NAME}"
     echo "Environment: ${ENV}"
     script {
-        def BRANCH_NAME = BRANCH?: "${DEFAULT_BRANCH}"
+        //def BRANCH_NAME = BRANCH?: "${DEFAULT_BRANCH}"
         def GIT_URL = ""
         if (MODULE == "drupal-app") {
             GIT_URL = "git@gitlab.intelligrape.net:tothenew/ttnd-website-drupal.git"
