@@ -83,7 +83,7 @@ def downloadDockerConfigFromS3(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME) {
 }
 
 // docker push
-def dockerImagePush(REGION_NAME, REPOSITORY_NUMBER, DOCKER_IMAGE_NAME, COMMIT_ID) {
+def dockerImagePush(REGION_NAME, REPOSITORY_NUMBER, DOCKER_IMAGE_NAME, ECS_IMAGE_NAME) {
     sh """#!/bin/bash
         set -xe
         echo $WORKSPACE
@@ -91,7 +91,7 @@ def dockerImagePush(REGION_NAME, REPOSITORY_NUMBER, DOCKER_IMAGE_NAME, COMMIT_ID
         echo "Docker Image Push"
         aws ecr get-login-password --region ${REGION_NAME} | docker login --username AWS --password-stdin ${REPOSITORY_NUMBER}.dkr.ecr.${REGION_NAME}.amazonaws.com
         docker rmi -f ${DOCKER_IMAGE_NAME}
-        docker buildx build --platform linux/arm64 --provenance=false -f Dockerfile --build-arg artifact_version=${COMMIT_ID} -t ${DOCKER_IMAGE_NAME} -t ${ECS_IMAGE_NAME} --push .
+        docker buildx build --platform linux/arm64 --provenance=false -f Dockerfile --build-arg artifact_version=${DOCKER_IMAGE_NAME} -t ${ECS_IMAGE_NAME} --push .
 
         if [ \$? -eq 0 ]
         then
