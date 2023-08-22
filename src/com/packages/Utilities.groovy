@@ -71,7 +71,7 @@ def downloadDockerConfigFromS3(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME) {
     sh """#!/bin/bash
         set -xe
         echo "env=${ENV}" > $WORKSPACE/version
-        echo "artifact_version=${ARTIFACT_VERSION}" >> $WORKSPACE/version
+     
         
         if [ "${MODULE}" == "drupal-app" ]
         then
