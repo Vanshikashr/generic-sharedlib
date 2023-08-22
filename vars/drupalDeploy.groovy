@@ -4,7 +4,7 @@ import com.packages.Utilities
 import com.packages.Build
 //import com.packages.Deploy
 
-def call( ENV ,  BRANCH, MODULE,DEFAULT_BRANCH,  REGION_NAME, REPOSITORY_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX, PROJECT_NAME)
+def call( ENV , BRANCH_NAME, MODULE,DEFAULT_BRANCH,  REGION_NAME, REPOSITORY_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX, PROJECT_NAME)
 {
     build = new Build()
     utilities = new Utilities()
@@ -14,7 +14,7 @@ pipeline {
     parameters {
          choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
         choice(name: 'MODULE', choices: ['drupal-app'], description: 'Choose module to build')
-        string(name: 'BRANCH', defaultValue: 'ttn-infra', description: 'Git Branch Name')
+        string(name: 'BRANCH_NAME', defaultValue: 'ttn-infra', description: 'Git Branch Name')
         
        
     }
