@@ -4,7 +4,7 @@ import com.packages.Utilities
 import com.packages.Build
 import com.packages.Deploy
 
-def call( containerRegistoryUrl, appName,S3_BUCKET_NAME, S3_BUCKET_PATH, awsRegion)
+def call( containerRegistoryUrl, appName, awsRegion)
 {
     build = new Build()
     utilities = new Utilities()
@@ -23,7 +23,7 @@ pipeline {
                 steps {            
                     script {
                         utilities.dockerLoginEcr( containerRegistoryUrl, awsRegion)    
-                        build.dockerBuild(containerRegistoryUrl, appName, S3_BUCKET_NAME, S3_BUCKET_PATH, awsRegion)
+                        build.dockerBuild(containerRegistoryUrl, appName,  awsRegion)
                         utilities.dockerPush()
                     }
                 }
