@@ -14,7 +14,7 @@ pipeline {
     parameters {
         choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
         choice(name: 'MODULE', choices: ['react'], description: 'Choose module to build')
-        string(name: 'BRANCH', description: 'Branch')
+        string(name: 'BRANCH_NAME', description: 'Branch')
         
        
     }
@@ -48,7 +48,7 @@ pipeline {
         stage("Pulling the Repository") {
             steps {
                 script {
-                utilities.pullRepository(BRANCH,ENV,DEFAULT_BRANCH,MODULE)
+                utilities.pullRepository(BRANCH_NAME,ENV,DEFAULT_BRANCH,MODULE)
             }
             }
         }
