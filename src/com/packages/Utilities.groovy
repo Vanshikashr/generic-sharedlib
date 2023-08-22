@@ -21,7 +21,7 @@ def notifyUserStarted(MODULE, ENV,  REGION_NAME, REPOSITORY_NUMBER, DEFAULT_ENV,
 }
 
 // pull repository
-def pullRepository(BRANCH,ENV,DEFAULT_BRANCH,MODULE,) {
+def pullRepository(BRANCH,ENV,DEFAULT_BRANCH,MODULE) {
     echo "Branch: ${BRANCH}"
     echo "Environment: ${ENV}"
     script {
