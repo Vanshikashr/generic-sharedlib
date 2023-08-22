@@ -5,7 +5,7 @@ def cleanWorkspace() {
 }
 
 // notify user
-def notifyUserStarted(MODULE, ENV, BUILD_NUMBER, REGION_NAME, REPOSITORY_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX, PROJECT_NAME) {
+def notifyUserStarted(MODULE, ENV,  REGION_NAME, REPOSITORY_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX, PROJECT_NAME) {
     def deployment_details = ""
     def postfix = ", "
     if (MODULE == "drupal-app") {
