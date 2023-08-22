@@ -4,7 +4,7 @@ import com.packages.Utilities
 import com.packages.Build
 import com.packages.Deploy
 
-def call( containerRegistoryUrl, appName,S3_BUCKET_NAME, S3_BUCKET_PATH,S3_BUCKET_PATH, awsRegion)
+def call( containerRegistoryUrl, appName,S3_BUCKET_NAME, S3_BUCKET_PATH, awsRegion)
 {
     build = new Build()
     utilities = new Utilities()
@@ -14,7 +14,7 @@ pipeline {
     parameters {
         choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
         choice(name: 'appName', choices: ['react'], description: 'Choose module to build')
-        string(name: 'BRANCH', description: 'Branch')
+        string(name: 'branchName', description: 'Branch')
         
        
     }
@@ -23,7 +23,7 @@ pipeline {
                 steps {            
                     script {
                         utilities.dockerLoginEcr( containerRegistoryUrl, awsRegion)    
-                        build.dockerBuild(containerRegistoryUrl, appName,S3_BUCKET_NAME, S3_BUCKET_PATH,S3_BUCKET_PATH)
+                        build.dockerBuild(containerRegistoryUrl, appName, S3_BUCKET_NAME, S3_BUCKET_PATH, awsRegion)
                         utilities.dockerPush()
                     }
                 }
