@@ -19,3 +19,18 @@ def notifyUserStarted(MODULE, ENV, BUILD_NUMBER, REGION_NAME, REPOSITORY_NUMBER,
         --region ${REGION_NAME}
     """
 }
+
+// pull repository
+def pullRepository(BRANCH,ENV,DEFAULT_BRANCH,MODULE,) {
+    echo "Branch: ${BRANCH}"
+    echo "Environment: ${ENV}"
+    script {
+        def BRANCH_NAME = BRANCH?: "${DEFAULT_BRANCH}"
+        def GIT_URL = ""
+        if (MODULE == "drupal-app") {
+            GIT_URL = "git@gitlab.intelligrape.net:tothenew/ttnd-website-drupal.git"
+        }
+        git branch: "${BRANCH_NAME}", changelog: true, poll: true, url: "${GIT_URL}"
+    }
+}
+
