@@ -48,7 +48,7 @@ pipeline {
         stage("Pulling the Repository") {
             steps {
                 script {
-                utilities.pullRepository(DEFAULT_BRANCH)
+                utilities.pullRepository(BRANCH,ENV,DEFAULT_BRANCH,MODULE)
             }
             }
         }
