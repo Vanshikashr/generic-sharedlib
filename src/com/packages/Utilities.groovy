@@ -34,3 +34,35 @@ def pullRepository(BRANCH,ENV,DEFAULT_BRANCH,MODULE,) {
     }
 }
 
+// setting up environment variables
+def setupEnvironments(BUILD_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMBER,REGION_NAME,ENV,BRANCH_NAME) {
+    def COMMIT_ID = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
+    def ARTIFACT_VERSION = "${BUILD_NUMBER}-${COMMIT_ID}"
+
+    def REPOSITORY_NAME = "${DEFAULT_ENV}-${DEFAULT_PROJECT_PREFIX}-${MODULE}"
+    def IMAGE_NAME = "${REPOSITORY_NUMBER}.dkr.ecr.${REGION_NAME}.amazonaws.com/${REPOSITORY_NAME}"
+
+    def DOCKER_IMAGE_TAG = "${ENV}_${BRANCH_NAME}_${COMMIT_ID}"
+    def ECS_IMAGE_TAG = "${ENV}_latest"
+
+    def DOCKER_IMAGE_NAME = "${IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+    def ECS_IMAGE_NAME = "${IMAGE_NAME}:${ECS_IMAGE_TAG}"
+
+    def CLUSTER_NAME = "${ENV}-${DEFAULT_PROJECT_PREFIX}"
+    def ECS_PREFIX = "${ENV}-${DEFAULT_PROJECT_PREFIX}-${MODULE}"
+    def TASK_NAME = "${ECS_PREFIX}"
+    def SERVICE_NAME = "${ECS_PREFIX}"
+
+    println "ARTIFACT_VERSION: $ARTIFACT_VERSION" 
+    println "REPOSITORY_NAME: $REPOSITORY_NAME" 
+    println "IMAGE_NAME: $IMAGE_NAME" 
+    println "DOCKER_IMAGE_NAME: $DOCKER_IMAGE_NAME" 
+    println "CLUSTER_NAME: $CLUSTER_NAME" 
+    println "ECS_IMAGE_NAME: $ECS_IMAGE_NAME" 
+    println "TASK_NAME: $TASK_NAME"
+    println "SERVICE_NAME: $SERVICE_NAME" 
+
+
+    
+   
+}
