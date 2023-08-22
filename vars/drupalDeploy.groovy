@@ -74,7 +74,7 @@ pipeline {
             steps {
 
                 script {
-                utilities.dockerImagePush(REGION_NAME,REPOSITORY_NUMBER, DOCKER_IMAGE_NAME)
+                utilities.dockerImagePush(REGION_NAME,REPOSITORY_NUMBER, DOCKER_IMAGE_NAME , DOCKER_IMAGE_NAME)
                    
                 }
             }
