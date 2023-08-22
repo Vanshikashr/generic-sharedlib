@@ -295,7 +295,7 @@ def loadConfig(String configResourcePath, String configAppPath) {
 //This function logs into ECR repo
 // prameters:-
 //	> containerRegistoryUrl - docker repo url (format: <accountName>.dkr.ecr.<region>.amazonaws.com)
-def dockerLoginEcr() {  
+def dockerLoginEcr(containerRegistoryUrl,awsRegion) {  
     def containerRegistoryUrl = env.containerRegistoryUrl
     env.awsRegion = sh(script: "echo ${containerRegistoryUrl} | cut -d . -f 4" , returnStdout: true).trim()
     println('Logging into ECR repository...')
