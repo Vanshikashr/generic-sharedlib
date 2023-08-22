@@ -62,10 +62,10 @@ pipeline {
             }
         }
         
-        stage("Building the Artifacts") {
+        stage("Download docker config") {
             steps {
                 script {
-                build.buildArtifacts(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME)
+                 utilities.downloadDockerConfigFromS3(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME)
             }
             }
         }
