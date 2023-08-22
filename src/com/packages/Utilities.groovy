@@ -66,3 +66,17 @@ def setupEnvironments(BUILD_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX,MODULE,R
     
    
 }
+// download from s3
+def downloadDockerConfigFromS3(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME) {
+    sh """#!/bin/bash
+        set -xe
+        echo "env=${ENV}" > $WORKSPACE/version
+        echo "artifact_version=${ARTIFACT_VERSION}" >> $WORKSPACE/version
+        
+        if [ "${MODULE}" == "drupal-app" ]
+        then
+            aws s3 cp s3://${S3_BUCKET_NAME}/${S3_BUCKET_PATH}/${MODULE}/ ./ --recursive --region ${REGION_NAME}
+        fi
+    """
+}
+
