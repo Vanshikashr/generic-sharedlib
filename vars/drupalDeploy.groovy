@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                    
-                     utilities.setupEnvironments(BUILD_NUMBER,DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMBER,REGION_NAME,ENV,BRANCH_NAME)
+                     utilities.setupEnvironments(BUILD_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX,MODULE,REPOSITORY_NUMBER,REGION_NAME,ENV,BRANCH_NAME)
                   
                 }
             }
