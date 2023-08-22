@@ -81,7 +81,7 @@ def downloadDockerConfigFromS3(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME) {
 }
 
 // docker push
-def dockerImagePush(REGION_NAME, REPOSITORY_NUMBER, DOCKER_IMAGE_NAME) {
+def dockerImagePush(REGION_NAME, REPOSITORY_NUMBER) {
     sh """#!/bin/bash
         set -xe
         echo $WORKSPACE
