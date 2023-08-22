@@ -12,9 +12,9 @@ def call( ENV ,  DEFAULT_BRANCH, BRANCH_NAME, MODULE,  REGION_NAME, REPOSITORY_N
 pipeline {
     agent any
     parameters {
-        choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
-        choice(name: 'MODULE', choices: ['react'], description: 'Choose module to build')
-        string(name: 'BRANCH_NAME', description: 'Branch')
+         choice(name: 'ENV', choices: ['dev'], description: 'Choose Environment Name')
+        choice(name: 'MODULE', choices: ['drupal-app'], description: 'Choose module to build')
+        string(name: 'BRANCH', defaultValue: 'ttn-infra', description: 'Git Branch Name')
         
        
     }
