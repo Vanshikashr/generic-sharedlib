@@ -4,7 +4,7 @@ import com.packages.Utilities
 import com.packages.Build
 import com.packages.Deploy
 
-def call( ENV , GIT_URL, DEFAULT_BRANCH, BRANCH_NAME, MODULE,  REGION_NAME, REPOSITORY_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX, PROJECT_NAME)
+def call( ENV ,  DEFAULT_BRANCH, BRANCH_NAME, MODULE,  REGION_NAME, REPOSITORY_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX, PROJECT_NAME)
 {
     build = new Build()
     utilities = new Utilities()
@@ -48,7 +48,7 @@ pipeline {
         stage("Pulling the Repository") {
             steps {
                 script {
-                utilities.pullRepository(GIT_URL,DEFAULT_BRANCH)
+                utilities.pullRepository(DEFAULT_BRANCH)
             }
             }
         }
