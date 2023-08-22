@@ -1,5 +1,5 @@
 package com.packages
-def dockerBuild(containerRegistoryUrl, appName,S3_BUCKET_NAME, S3_BUCKET_PATH,S3_BUCKET_PATH) {
+def dockerBuild(containerRegistoryUrl, appName,S3_BUCKET_NAME, S3_BUCKET_PATH, REGION_NAME) {
     def containerRegistoryUrl = env.containerRegistoryUrl
     def appName =  params.appName
 
