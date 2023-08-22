@@ -61,11 +61,13 @@ def setupEnvironments(BUILD_NUMBER, DEFAULT_ENV, DEFAULT_PROJECT_PREFIX,MODULE,R
     println "ECS_IMAGE_NAME: $ECS_IMAGE_NAME" 
     println "TASK_NAME: $TASK_NAME"
     println "SERVICE_NAME: $SERVICE_NAME" 
+      
+    }
 
-
-    
+ 
    
-}
+   
+
 // download from s3
 def downloadDockerConfigFromS3(S3_BUCKET_NAME,S3_BUCKET_PATH,REGION_NAME) {
     sh """#!/bin/bash
@@ -88,13 +90,13 @@ def dockerImagePush(REGION_NAME, REPOSITORY_NUMBER, DOCKER_IMAGE_NAME) {
 
         echo "Docker Image Push"
         aws ecr get-login-password --region ${REGION_NAME} | docker login --username AWS --password-stdin ${REPOSITORY_NUMBER}.dkr.ecr.${REGION_NAME}.amazonaws.com
-        docker rmi -f ${DOCKER_IMAGE_NAME}
-        docker buildx build --platform linux/arm64 --provenance=false -f Dockerfile --build-arg artifact_version=${COMMIT_ID} -t ${DOCKER_IMAGE_NAME} -t ${ECS_IMAGE_NAME} --push .
+        docker rmi -f ${setupEnvironments.DOCKER_IMAGE_NAME}
+        docker buildx build --platform linux/arm64 --provenance=false -f Dockerfile --build-arg artifact_version=${COMMIT_ID} -t ${setupEnvironments.DOCKER_IMAGE_NAME} -t ${ECS_IMAGE_NAME} --push .
 
         if [ \$? -eq 0 ]
         then
             echo "Successfully image tagged and pushed to repository"
-            echo ${DOCKER_IMAGE_NAME} > $WORKSPACE/image_id
+            echo ${setupEnvironments.DOCKER_IMAGE_NAME} > $WORKSPACE/image_id
             cat $WORKSPACE/image_id
         else
             echo "Error in tagging/pushing image"
